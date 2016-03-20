@@ -3,14 +3,23 @@ package engine
 import (
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/drone/drone/shared/docker"
 	"github.com/samalba/dockerclient"
 )
 
+func getEnvDefault(name string, image string) string {
+	tmp := os.Getenv(name)
+	if tmp == "" {
+		tmp = image
+	}
+	return tmp
+}
+
 var (
 	// name of the build agent container.
-	DefaultAgent = "drone/drone-exec:latest"
+	DefaultAgent = getEnvDefault("DRONE_AGENT_IMAGE", "drone/drone-exec:latest")
 
 	// default name of the build agent executable
 	DefaultEntrypoint = []string{"/bin/drone-exec"}
